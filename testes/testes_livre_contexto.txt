@@ -1,0 +1,7 @@
+# entrada | esperado | descricao
+((x+y)*z)|ACCEPT|Parenteses aninhados corretos
+{[a+(b*c)]}|ACCEPT|Tres tipos de delimitadores
+|ACCEPT|Cadeia vazia tem pilha balanceada
+((a+b)|REJECT|Fecha menos do que abre
+([)]|REJECT|Fechamento em ordem incorreta
+{a+b]]|REJECT|Fecha simbolo nao correspondente

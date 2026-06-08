@@ -1,0 +1,7 @@
+# entrada | esperado | descricao
+123.456.789-00|ACCEPT|Formato canonico valido
+000.111.222-33|ACCEPT|Zeros e blocos validos
+999.999.999-99|ACCEPT|Caso textual extremo
+12.34.56-78|REJECT|Quantidade incorreta de digitos
+12345678900|REJECT|Ausencia de separadores
+123.456.789.00|REJECT|Separador final incorreto

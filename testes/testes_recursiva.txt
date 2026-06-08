@@ -1,0 +1,7 @@
+# entrada | esperado | descricao
+#|ACCEPT|Caso com w vazio
+0#0|ACCEPT|Menor caso nao vazio
+101#101|ACCEPT|Copia binaria correta
+1#0|REJECT|Lados diferentes
+101#100|REJECT|Ultimo simbolo difere
+10#010|REJECT|Mesmos simbolos em ordem diferente

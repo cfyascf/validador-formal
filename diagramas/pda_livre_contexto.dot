@@ -1,0 +1,12 @@
+digraph PDALivreContexto {
+  rankdir=LR;
+  node [shape=circle];
+  start [shape=point];
+  q_accept [shape=doublecircle];
+
+  start -> q_loop;
+  q_loop -> q_loop [label="(, push(\n[, push[\n{, push{"];
+  q_loop -> q_loop [label=") com topo ( : pop\n] com topo [ : pop\n} com topo { : pop"];
+  q_loop -> q_loop [label="outro simbolo : noop"];
+  q_loop -> q_accept [label="epsilon com topo Z"];
+}

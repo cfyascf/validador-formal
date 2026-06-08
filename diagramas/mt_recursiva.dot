@@ -1,0 +1,37 @@
+digraph MTRecursiva {
+  rankdir=LR;
+  node [shape=circle];
+  start [shape=point];
+  q_accept [shape=doublecircle];
+  q_reject [shape=doublecircle];
+
+  start -> q_start;
+  q_start -> q_seek_hash_0 [label="0/X,R"];
+  q_start -> q_seek_hash_1 [label="1/Y,R"];
+  q_start -> q_start [label="X/X,R ; Y/Y,R"];
+  q_start -> q_verify_right_done [label="#/#,R"];
+
+  q_seek_hash_0 -> q_seek_hash_0 [label="0,1,X,Y / mesma coisa,R"];
+  q_seek_hash_0 -> q_seek_match_0 [label="#/#,R"];
+
+  q_seek_hash_1 -> q_seek_hash_1 [label="0,1,X,Y / mesma coisa,R"];
+  q_seek_hash_1 -> q_seek_match_1 [label="#/#,R"];
+
+  q_seek_match_0 -> q_seek_match_0 [label="X,Y / mesma coisa,R"];
+  q_seek_match_0 -> q_return_left [label="0/X,L"];
+  q_seek_match_1 -> q_seek_match_1 [label="X,Y / mesma coisa,R"];
+  q_seek_match_1 -> q_return_left [label="1/Y,L"];
+
+  q_return_left -> q_return_left [label="0,1,X,Y,# / mesma coisa,L"];
+  q_return_left -> q_start [label="B/B,R"];
+
+  q_verify_right_done -> q_verify_right_done [label="X,Y / mesma coisa,R"];
+  q_verify_right_done -> q_accept [label="B/B,S"];
+
+  q_start -> q_reject [label="B/B,S"];
+  q_seek_hash_0 -> q_reject [label="B/B,S"];
+  q_seek_hash_1 -> q_reject [label="B/B,S"];
+  q_seek_match_0 -> q_reject [label="1,#,B / rejeita"];
+  q_seek_match_1 -> q_reject [label="0,#,B / rejeita"];
+  q_verify_right_done -> q_reject [label="0,1,# / rejeita"];
+}
