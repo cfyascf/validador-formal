@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 import sys
 from dataclasses import dataclass
 
@@ -7,6 +8,7 @@ from dataclasses import dataclass
 ACCEPTING_STATES = {"q14"}
 INITIAL_STATE = "q0"
 SYMBOL_CLASSES = {"DIGIT", ".", "-"}
+REGEX_PATTERN = re.compile(r"^\d{3}\.\d{3}\.\d{3}-\d{2}$")
 
 TRANSITIONS = {
     ("q0", "DIGIT"): "q1",
@@ -74,6 +76,17 @@ def recognize(text: str) -> dict:
     }
 
 
+def compare_with_regex(text: str) -> dict:
+    manual = recognize(text)
+    regex_accepted = bool(REGEX_PATTERN.fullmatch(text))
+    return {
+        "input": text,
+        "manual": manual,
+        "regex_accepted": regex_accepted,
+        "equivalent": manual["accepted"] == regex_accepted,
+    }
+
+
 def format_result(text: str, result: dict) -> str:
     verdict = "ACEITA" if result["accepted"] else "REJEITA"
     lines = [
@@ -87,13 +100,19 @@ def format_result(text: str, result: dict) -> str:
 
 
 def main(argv: list[str]) -> int:
-    if len(argv) != 2:
-        print('Uso: python src/regular.py "123.456.789-00"')
+    if len(argv) not in {2, 3}:
+        print('Uso: python src/regular.py "123.456.789-00" [--compare-re]')
         return 1
 
     text = argv[1]
     result = recognize(text)
     print(format_result(text, result))
+    if len(argv) == 3 and argv[2] == "--compare-re":
+        comparison = compare_with_regex(text)
+        regex_verdict = "ACEITA" if comparison["regex_accepted"] else "REJEITA"
+        equivalent = "SIM" if comparison["equivalent"] else "NAO"
+        print(f"Regex Python: {regex_verdict}")
+        print(f"Equivalencia manual x re: {equivalent}")
     return 0 if result["accepted"] else 2
 
 

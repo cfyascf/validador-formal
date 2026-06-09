@@ -1,0 +1,7 @@
+# entrada | esperado | descricao
+|ACCEPT|Cadeia vazia e palindromo
+0|ACCEPT|Palindromo unitario
+0110|ACCEPT|Palindromo par
+01010|ACCEPT|Palindromo impar
+01|REJECT|Extremidades diferentes
+0101|REJECT|Nao espelha em torno do centro

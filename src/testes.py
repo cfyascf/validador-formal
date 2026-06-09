@@ -5,6 +5,7 @@ from pathlib import Path
 
 import livre_contexto
 import recursiva
+import recursiva_palindromo
 import regular
 
 
@@ -23,6 +24,10 @@ RECOGNIZERS = {
     "regular": (regular.recognize, TESTS_DIR / "testes_regular.txt"),
     "livre_contexto": (livre_contexto.recognize, TESTS_DIR / "testes_livre_contexto.txt"),
     "recursiva": (recursiva.recognize, TESTS_DIR / "testes_recursiva.txt"),
+}
+
+BONUS_RECOGNIZERS = {
+    "recursiva_palindromo": (recursiva_palindromo.recognize, TESTS_DIR / "testes_recursiva_palindromo.txt"),
 }
 
 
@@ -71,10 +76,34 @@ def run_suite(name: str, recognizer, path: Path) -> bool:
     return suite_ok
 
 
+def run_regex_comparison() -> bool:
+    print_header("comparacao_regular_re")
+    suite_ok = True
+    for case in load_cases(TESTS_DIR / "testes_regular.txt"):
+        comparison = regular.compare_with_regex(case.text)
+        obtained = comparison["manual"]["accepted"]
+        regex_accepted = comparison["regex_accepted"]
+        equivalent = comparison["equivalent"]
+        suite_ok = suite_ok and equivalent and obtained == case.expected
+        regex_label = verdict_label(regex_accepted)
+        print(
+            f"{case.text:<18} {verdict_label(case.expected):<10} {regex_label:<10} {comparison['manual']['steps']:<8} manual x re = {'OK' if equivalent else 'DIVERGE'}"
+        )
+    return suite_ok
+
+
 def main() -> int:
     global_ok = True
     for name, (recognizer, path) in RECOGNIZERS.items():
         global_ok = run_suite(name, recognizer, path) and global_ok
+
+    bonus_ok = True
+    for name, (recognizer, path) in BONUS_RECOGNIZERS.items():
+        bonus_ok = run_suite(name, recognizer, path) and bonus_ok
+
+    regex_ok = run_regex_comparison()
+
+    global_ok = global_ok and bonus_ok and regex_ok
 
     print("\nResultado final:", "TODOS OS TESTES PASSARAM" if global_ok else "HOUVE FALHAS")
     return 0 if global_ok else 1
